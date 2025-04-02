@@ -1,8 +1,23 @@
+from pathlib import Path
+from typing import Any
+
 import ILAMB.ilamblib as il
 import numpy as np
 from ILAMB.Confrontation import Confrontation
 from ILAMB.ModelResult import ModelResult
 from ILAMB.Variable import Variable
+from netCDF4 import Dataset
+
+
+def _to_dataset(path: Path, variables: list[Path], attributes: dict[str, Any]) -> None:
+    # Dump model intermediate outputs to a file
+    with Dataset(path, mode="w") as results:
+        results.setncatts(attributes | {"complete": 0})
+        for var in variables:
+            var.toNetCDF4(results, group="MeanState")
+        results.setncattr(
+            "complete", 1
+        )  # if we get here without failure, flag this as complete
 
 
 class ConfAMOC(Confrontation):
@@ -22,39 +37,58 @@ class ConfAMOC(Confrontation):
             t0=None if len(self.study_limits) != 2 else self.study_limits[0],
             tf=None if len(self.study_limits) != 2 else self.study_limits[1],
         )
-
         mod = m.extractTimeSeries(
             self.variable,
             alt_vars=self.alternate_vars,
             initial_time=obs.time[0],
             final_time=obs.time[-1],
         )
-
         obs, mod = il.MakeComparable(obs, mod, clip_ref=True)
-
         return obs, mod
+
+    def confront(self, m: ModelResult) -> None:
+        obs, mod = self.stageData(m)
+
+        # Compute the mean values ovre the time period
+        obs_mean = obs.integrateInTime(mean=True)
+        mod_mean = mod.integrateInTime(mean=True)
+
+        # Rename these for better viewing in the output, appending `global` is
+        # something ILAMB uses internally and won't appear in the final output.
+        obs_mean.name = "Mean AMOC Strength global"
+        mod_mean.name = "Mean AMOC Strength global"
+
+        # A first take at a score for AMOC based on the relative error of the
+        # mean strength.
+        score = Variable(
+            name="Overall Score global",
+            unit="1",
+            data=np.exp(-np.abs(mod_mean.data - obs_mean.data) / obs_mean.data),
+        )
+
+        # Write out model intermediate outputs
+        _to_dataset(
+            Path(self.output_path) / f"{self.name}_{m.name}.nc",
+            [mod, mod_mean, score],
+            {"name": m.name, "color": m.color},
+        )
+
+        # If this process is the 'master' also write out Benchmark data
+        if self.master:
+            _to_dataset(
+                Path(self.output_path) / f"{self.name}_Benchmark.nc",
+                [obs, obs_mean],
+                {"name": "Benchmark", "color": "k"},
+            )
 
 
 if __name__ == "__main__":
     c = ConfAMOC(
+        name="RAPID",
         source="data/amoc_mon_RAPID_BE_NA_200404-202302.nc",
         variable="amoc",
         alternate_vars=["AMOC"],
+        output_path="_tmp",
     )
     m = ModelResult("./FESOM2-REcoM", modelname="FESOM2-REcoM")
-    obs, mod = c.stageData(m)
-    print(obs)
-    print(mod)
-
-    obs_mean = obs.integrateInTime(mean=True)
-    mod_mean = obs.integrateInTime(mean=True)
-
-    rel_error = np.abs(mod_mean.data - obs_mean.data) / obs_mean.data
-    score = np.exp(-rel_error)
-
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots()
-    obs.plot(ax=ax)
-
-    fig.savefig("amoc.png")
+    c.confront(m)
