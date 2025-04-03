@@ -49,28 +49,40 @@ class ConfAMOC(Confrontation):
     def confront(self, m: ModelResult) -> None:
         obs, mod = self.stageData(m)
 
-        # Compute the mean values ovre the time period
+        # Compute the mean values over the time period
         obs_mean = obs.integrateInTime(mean=True)
         mod_mean = mod.integrateInTime(mean=True)
 
         # Rename these for better viewing in the output, appending `global` is
         # something ILAMB uses internally and won't appear in the final output.
-        obs_mean.name = "Mean AMOC Strength global"
-        mod_mean.name = "Mean AMOC Strength global"
+        obs_mean.name = "AMOC at 26N global"
+        mod_mean.name = "AMOC at 26N global"
 
-        # A first take at a score for AMOC based on the relative error of the
-        # mean strength.
-        score = Variable(
-            name="Overall Score global",
+        # A bias score based on the relative error in AMOC mean.
+        bias_score = Variable(
+            name="Bias Score global",
             unit="1",
             data=np.exp(-np.abs(mod_mean.data - obs_mean.data) / obs_mean.data),
+        )
+
+        # A Taylor score combining aspects of variability and correlation
+        with np.errstate(all="ignore"):
+            std0 = obs.data.std()
+            std = mod.data.std()
+        R0 = 1.0
+        R = obs.correlation(mod, ctype="temporal")
+        std /= std0
+        taylor_score = Variable(
+            name="Temporal Distribution Score global",
+            unit="1",
+            data=4.0 * (1.0 + R.data) / ((std + 1.0 / std) ** 2 * (1.0 + R0)),
         )
 
         # Write out model intermediate outputs
         _to_dataset(
             Path(self.output_path) / f"{self.name}_{m.name}.nc",
-            [mod, mod_mean, score],
-            {"name": m.name, "color": m.color},
+            [mod, mod_mean, bias_score, taylor_score],
+            {"name": m.name, "color": m.color, "weight": self.cweight},
         )
 
         # If this process is the 'master' also write out Benchmark data
@@ -78,7 +90,7 @@ class ConfAMOC(Confrontation):
             _to_dataset(
                 Path(self.output_path) / f"{self.name}_Benchmark.nc",
                 [obs, obs_mean],
-                {"name": "Benchmark", "color": "k"},
+                {"name": "Benchmark", "color": "k", "weight": self.cweight},
             )
 
 
