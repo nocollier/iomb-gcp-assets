@@ -34,7 +34,7 @@ def create_multimodel_mean(variables: dict[str, Variable]) -> Variable:
         out.data += v.data
         out.data_bnds[:, 0] += v.data * v.data
     out.data /= len(variables)
-    std = out.data_bnds[:, 0] / len(variables) - out.data * out.data
+    std = np.sqrt(out.data_bnds[:, 0] / len(variables) - out.data * out.data)
     out.data_bnds[:, 0] = out.data - std
     out.data_bnds[:, 1] = out.data + std
     return out
