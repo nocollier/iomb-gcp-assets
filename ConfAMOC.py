@@ -104,6 +104,18 @@ class ConfAMOC(Confrontation):
             data=4.0 * (1.0 + R.data) / ((std + 1.0 / std) ** 2 * (1.0 + R0)),
         )
 
+        # For plotting, we only want AMOC at yearly intervals
+        bnds = np.array(
+            [
+                [(y - 1850) * 365 for y in range(2004, 2024)],
+                [(y - 1850 + 1) * 365 for y in range(2004, 2024)],
+            ]
+        ).T
+        obs = obs.coarsenInTime(bnds)
+        mod = mod.coarsenInTime(bnds)
+        obs.name = "amoc"
+        mod.name = "amoc"
+
         # Write out model intermediate outputs
         _to_dataset(
             Path(self.output_path) / f"{self.name}_{m.name}.nc",
