@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "ilamb3>=2025.4.26",
-]
+dependencies = ["ilamb3"]
+
+[tool.uv.sources]
+ilamb3 = { git = "https://github.com/rubisco-sfa/ilamb3", rev = "747410c88f957844e416e320d6f40e4bbd52837b" }
