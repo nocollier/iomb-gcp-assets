@@ -1,0 +1,45 @@
+Physical Drivers:
+
+  Temperature:
+
+    WOA2023-surface:
+      sources:
+        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: Reds
+      depth: 0.0
+      alternate_vars:
+      - tos
+
+    WOA2023-100m:
+      sources:
+        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: Reds
+      depth: 100.0
+
+    WOA2023-200m:
+      sources:
+        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: Reds
+      depth: 200.0
+
+  Salinity:
+
+    WOA2023-surface:
+      sources:
+        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: YlGn
+      depth: 0.0
+      alternate_vars:
+      - sos
+
+    WOA2023-100m:
+      sources:
+        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: YlGn
+      depth: 100.0
+
+    WOA2023-200m:
+      sources:
+        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
+      variable_cmap: YlGn
+      depth: 200.0
