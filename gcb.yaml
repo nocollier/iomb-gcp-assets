@@ -1,45 +1,131 @@
-Physical Drivers:
-
-  Temperature:
-
-    WOA2023-surface:
+Temperature:
+  Temperature-surface:
+    GLODAPv2.2023:
       sources:
-        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
+        thetao: GLODAPv2.2023/thetao.nc
       variable_cmap: Reds
       depth: 0.0
       alternate_vars:
       - tos
 
-    WOA2023-100m:
-      sources:
-        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
-      variable_cmap: Reds
-      depth: 100.0
-
-    WOA2023-200m:
-      sources:
-        thetao: WOA/thetao_mon_WOA_BE_gn_201501-202212.nc
-      variable_cmap: Reds
-      depth: 200.0
-
-  Salinity:
-
     WOA2023-surface:
       sources:
-        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
-      variable_cmap: YlGn
+        thetao: WOA2023/thetao.nc
+      variable_cmap: Reds
+      depth: 0.0
+      alternate_vars:
+      - tos
+
+Salinity:
+  Salinity-surface:
+    GLODAPv2.2023:
+      sources:
+        so: GLODAPv2.2023/so.nc
+      variable_cmap: viridis
+      depth: 0.0
+      alternate_vars:
+      - sos
+    
+    WOA2023:
+      sources: 
+        so: WOA2023/so.nc
+      variable_cmap: viridis
       depth: 0.0
       alternate_vars:
       - sos
 
-    WOA2023-100m:
+Mixed Layer Depth:
+  Mixed Layer Depth:
+    Boyer:
       sources:
-        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
-      variable_cmap: YlGn
-      depth: 100.0
+        mlotstmax: Boyer/mlotstmax.nc
+      alternate_vars:
+      - mlotstmax
+      - mld
+      - mld_dr0003
+      - ML.depth
 
-    WOA2023-200m:
+    Sallee:
       sources:
-        so: WOA/so_mon_WOA_BE_gn_201501-202212.nc
-      variable_cmap: YlGn
-      depth: 200.0
+        ML.depth: Sallee/GlobalML_Climato_1970_2018.nc
+      alternate_vars:
+      - mlotstmax
+      - mld
+      - mld_dr0003
+      - ML.depth
+
+    de_boyer_montegut2023:
+      sources:
+        mld_dr003: de_boyer_montegut2023/mld_dr003_ref10m_v2023.nc
+      alternate_vars:
+      - mlotstmax
+      - mld
+      - mld_dr0003
+      - ML.depth
+   
+
+Alkalinity:
+  Alkalinity-surface:
+    GLODAPv2.2023:
+      sources:
+        talk: GLODAPv2.2023/talk.nc
+      depth: 0.0
+      alternate_vars:
+      - talkos
+
+Dissolved Inorganic Carbon:
+  Dissolved Inorganic Carbon-surface:
+    GLODAPv2.2023:
+      sources:
+        dissic: GLODAPv2.2023/dissic.nc
+      depth: 0.0
+      alternate_vars:
+      - dissicos
+
+Revelle factor:
+  Revelle factor-surface:
+    GLODAPv2.2023:
+      sources:
+        Revelle: GLODAPv2.2023/Revelle.nc
+      alternate_vars:
+      - Revelle
+      - revelle_factor
+      - revelle
+
+    OceanSODA_ETHZ:
+      sources:
+        revelle_factor: OceanSODA_ETHZv2023/revelle.nc
+      alternate_vars:
+      - Revelle
+      - revelle_factor
+      - revelle
+      
+AMOC-time series:
+  AMOC_strength:
+    RAPID:
+      sources:
+        amoc: RAPID/amoc_mon_RAPID_BE_NA_200404-202302.nc
+      analyses:
+      - timeseries
+      alternate_vars:
+      - amoc
+      - AMOC
+
+Stratification-time series:
+  stratification-index:
+    EN.4.2.2:
+      sources:
+        so_si: EN.4.2.2/so_si_mon_EN4_BE_gn_200501-202112.nc
+      alternate_vars:
+      - SO_SI
+      analyses:
+      - timeseries
+
+Southern_Ocean_Salinity:
+  Southern_Ocean_Salinity-SPSS:
+    EN.4.2.2:
+      sources:
+        so_spss_sss: EN.4.2.2/so_spss_sss_mon_EN4_gn_200501-202112.nc
+      alternate_vars:
+      - SO_SPSS_SSS
+      analyses:
