@@ -4,7 +4,9 @@ Temperature:
       sources:
         thetao: GLODAPv2.2023/thetao.nc
       variable_cmap: Reds
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - tos
 
@@ -12,7 +14,9 @@ Temperature:
       sources:
         thetao: WOA2023/thetao.nc
       variable_cmap: Reds
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - tos
 
@@ -22,7 +26,9 @@ Salinity:
       sources:
         so: GLODAPv2.2023/so.nc
       variable_cmap: viridis
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - sos
     
@@ -30,7 +36,9 @@ Salinity:
       sources: 
         so: WOA2023/so.nc
       variable_cmap: viridis
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - sos
 
@@ -69,7 +77,9 @@ Alkalinity:
     GLODAPv2.2023:
       sources:
         talk: GLODAPv2.2023/talk.nc
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - talkos
 
@@ -78,7 +88,9 @@ Dissolved Inorganic Carbon:
     GLODAPv2.2023:
       sources:
         dissic: GLODAPv2.2023/dissic.nc
-      depth: 0.0
+      transform:
+      - select_depth:
+          value: 0
       alternate_vars:
       - dissicos
 
@@ -129,3 +141,4 @@ Southern_Ocean_Salinity:
       alternate_vars:
       - SO_SPSS_SSS
       analyses:
+      - timeseries

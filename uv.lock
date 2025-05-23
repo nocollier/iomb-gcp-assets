@@ -231,8 +231,7 @@ wheels = [
 
 [[package]]
 name = "ilamb3"
-version = "2025.4.28.post1.dev30+gb48c57c"
-source = { git = "https://github.com/rubisco-sfa/ilamb3?rev=b48c57c109ce97b373e170a7e30f44995cd4c97b#b48c57c109ce97b373e170a7e30f44995cd4c97b" }
+source = { editable = "../ilamb3" }
 dependencies = [
     { name = "cartopy" },
     { name = "cf-xarray" },
@@ -252,6 +251,42 @@ dependencies = [
     { name = "xarray" },
 ]
 
+[package.metadata]
+requires-dist = [
+    { name = "cartopy", specifier = ">=0.24.1" },
+    { name = "cf-xarray", specifier = ">=0.10.0" },
+    { name = "dask", specifier = ">=2025.2.0" },
+    { name = "jinja2", specifier = ">=3.1.5" },
+    { name = "loguru", specifier = ">=0.7.3" },
+    { name = "matplotlib", specifier = ">=3.10.0" },
+    { name = "nc-time-axis", specifier = ">=1.4.1" },
+    { name = "netcdf4", specifier = ">=1.7.2" },
+    { name = "numpy", specifier = ">=2.2.2" },
+    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "pint-xarray", specifier = ">=0.4" },
+    { name = "pooch", specifier = ">=1.8.2" },
+    { name = "pyyaml", specifier = ">=6.0.2" },
+    { name = "scipy", specifier = ">=1.15.1" },
+    { name = "statsmodels", specifier = ">=0.14.4" },
+    { name = "xarray", specifier = ">=2025.1.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+]
+doc = [
+    { name = "furo", specifier = ">=2024.8.6" },
+    { name = "ipython", specifier = ">=8.31.0" },
+    { name = "myst-nb", specifier = ">=1.1.2" },
+    { name = "numpydoc", specifier = ">=1.8.0" },
+    { name = "sphinx-autodoc-typehints", specifier = ">=3.0.1" },
+    { name = "sphinx-autosummary-accessors", specifier = ">=2023.4.0" },
+    { name = "sphinx-copybutton", specifier = ">=0.5.2" },
+]
+gcb = [{ name = "gsw", specifier = ">=3.6.19" }]
+
 [[package]]
 name = "iomb-gcp-assets"
 version = "0.1.0"
@@ -261,7 +296,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ilamb3", git = "https://github.com/rubisco-sfa/ilamb3?rev=b48c57c109ce97b373e170a7e30f44995cd4c97b" }]
+requires-dist = [{ name = "ilamb3", editable = "../ilamb3" }]
 
 [[package]]
 name = "jinja2"

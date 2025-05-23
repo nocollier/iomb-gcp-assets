@@ -2,8 +2,8 @@ from pathlib import Path
 
 import ilamb3
 import pandas as pd
-from ilamb3.run import run_study
 from ilamb3.meta import generate_dashboard_page
+from ilamb3.run import run_study
 
 root = Path("/albedo/work/user/srmoha001/ILAMB_sample/DATA/")
 ref_datasets = []
